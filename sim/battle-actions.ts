@@ -1757,13 +1757,14 @@ export class BattleActions {
 		baseDamage = this.battle.runEvent('WeatherModifyDamage', pokemon, target, move, baseDamage);
 
 		// crit - not a modifier
-		const isCrit = target.getMoveHitData(move).crit;
+		// const isCrit = target.getMoveHitData(move).crit;
+		const isCrit = 0;
 		if (isCrit) {
 			baseDamage = tr(baseDamage * (move.critModifier || (this.battle.gen >= 6 ? 1.5 : 2)));
 		}
 
 		// random factor - also not a modifier
-		baseDamage = this.battle.randomizer(baseDamage);
+		// baseDamage = this.battle.randomizer(baseDamage);
 
 		// STAB
 		// The "???" type never gets STAB
@@ -1822,7 +1823,7 @@ export class BattleActions {
 			}
 		}
 
-		if (isCrit && !suppressMessages) this.battle.add('-crit', target);
+		// if (isCrit && !suppressMessages) this.battle.add('-crit', target);
 
 		if (pokemon.status === 'brn' && move.category === 'Physical' && !pokemon.hasAbility('guts')) {
 			if (this.battle.gen < 6 || move.id !== 'facade') {
