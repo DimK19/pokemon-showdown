@@ -57,7 +57,8 @@ export const Conditions: import('../sim/dex-conditions').ConditionDataTable = {
 			}
 			// 1-3 turns
 			this.effectState.startTime = this.random(2, 5);
-			this.effectState.time = this.effectState.startTime;
+			// this.effectState.time = this.effectState.startTime;
+			this.effectState.time = 3;
 
 			if (target.removeVolatile('nightmare')) {
 				this.add('-end', target, 'Nightmare', '[silent]');
@@ -438,22 +439,38 @@ export const Conditions: import('../sim/dex-conditions').ConditionDataTable = {
 		duration: 2,
 		counterMax: 729,
 		onStart() {
-			this.effectState.counter = 3;
+			// this.effectState.counter = 3;
+			this.effectState.flag = 0;
 		},
 		onStallMove(pokemon) {
 			// this.effectState.counter should never be undefined here.
 			// However, just in case, use 1 if it is undefined.
+			/*
 			const counter = this.effectState.counter || 1;
 			this.debug("Success chance: " + Math.round(100 / counter) + "%");
 			const success = this.randomChance(1, counter);
 			if (!success) delete pokemon.volatiles['stall'];
 			return success;
+			*/
+			const success = 0;
+			if(!this.effectState.flag) {
+				success = 1;
+			}
+			else {
+				delete pokemon.volatiles['stall'];
+			}
+
+			this.effectState.flag = !this.effectState.flag;
+
+			return success;
 		},
 		onRestart() {
+			/*
 			if (this.effectState.counter < (this.effect as Condition).counterMax!) {
 				this.effectState.counter *= 3;
 			}
 			this.effectState.duration = 2;
+			*/
 		},
 	},
 	gem: {

@@ -1,6 +1,5 @@
 import re
 
-
 with open("old_moves.ts", 'r') as f:
     x = re.sub(r"accuracy: [0-7]\d,", "accuracy: 0,", f.read())
     x = re.sub(r"accuracy: [8-9]\d,", "accuracy: 100,", x)
