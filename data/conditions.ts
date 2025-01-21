@@ -38,10 +38,12 @@ export const Conditions: import('../sim/dex-conditions').ConditionDataTable = {
 		},
 		onBeforeMovePriority: 1,
 		onBeforeMove(pokemon) {
+			/*
 			if (this.randomChance(1, 4)) {
 				this.add('cant', pokemon, 'par');
 				return false;
 			}
+			*/
 		},
 	},
 	slp: {
@@ -440,7 +442,6 @@ export const Conditions: import('../sim/dex-conditions').ConditionDataTable = {
 		counterMax: 729,
 		onStart() {
 			// this.effectState.counter = 3;
-			this.effectState.flag = 0;
 		},
 		onStallMove(pokemon) {
 			// this.effectState.counter should never be undefined here.
@@ -452,17 +453,9 @@ export const Conditions: import('../sim/dex-conditions').ConditionDataTable = {
 			if (!success) delete pokemon.volatiles['stall'];
 			return success;
 			*/
-			const success = 0;
-			if(!this.effectState.flag) {
-				success = 1;
-			}
-			else {
-				delete pokemon.volatiles['stall'];
-			}
 
-			this.effectState.flag = !this.effectState.flag;
-
-			return success;
+			delete pokemon.volatiles['stall'];
+			return false;
 		},
 		onRestart() {
 			/*
