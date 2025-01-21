@@ -868,7 +868,15 @@ export class BattleActions {
 		}
 		move.totalDamage = 0;
 		pokemon.lastDamage = 0;
-		let targetHits = move.multihit || 1;
+		let targetHits = 1;
+		if(Array.isArray(move.multihit)) {
+			const mean = (a) => {return a.reduce((x, y) => x + y) / a.length};
+			targetHits = Math.floor(mean(move.multihit));
+			if(pokemon.hasItem('loadeddice')) {
+				targetHits++;
+			}
+		}
+		// let targetHits = move.multihit || 1;
 		if (Array.isArray(targetHits)) {
 			// yes, it's hardcoded... meh
 			if (targetHits[0] === 2 && targetHits[1] === 5) {
