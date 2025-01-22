@@ -854,6 +854,7 @@ export class Pokemon {
 	}
 
 	deductPP(move: string | Move, amount?: number | null, target?: Pokemon | null | false) {
+    /*
 		const gen = this.battle.gen;
 		move = this.battle.dex.moves.get(move);
 		const ppData = this.getMoveData(move);
@@ -868,6 +869,8 @@ export class Pokemon {
 			ppData.pp = 0;
 		}
 		return amount;
+    */
+    return this.getMoveData(move).pp;
 	}
 
 	moveUsed(move: ActiveMove, targetLoc?: number) {
