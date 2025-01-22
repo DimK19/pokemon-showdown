@@ -868,15 +868,15 @@ export class BattleActions {
 		}
 		move.totalDamage = 0;
 		pokemon.lastDamage = 0;
-		let targetHits = 1;
-		if(Array.isArray(move.multihit)) {
+		let targetHits = move.multihit || 1;
+		if(Array.isArray(targetHits)) {
 			const mean = (a) => {return a.reduce((x, y) => x + y) / a.length};
 			targetHits = Math.floor(mean(move.multihit));
 			if(pokemon.hasItem('loadeddice')) {
 				targetHits++;
 			}
 		}
-		// let targetHits = move.multihit || 1;
+		/*
 		if (Array.isArray(targetHits)) {
 			// yes, it's hardcoded... meh
 			if (targetHits[0] === 2 && targetHits[1] === 5) {
@@ -893,8 +893,10 @@ export class BattleActions {
 				targetHits = this.battle.random(targetHits[0], targetHits[1] + 1);
 			}
 		}
+
 		if (targetHits === 10 && pokemon.hasItem('loadeddice')) targetHits -= this.battle.random(7);
 		targetHits = Math.floor(targetHits);
+		*/
 		let nullDamage = true;
 		let moveDamage: (number | boolean | undefined)[] = [];
 		// There is no need to recursively check the ´sleepUsable´ flag as Sleep Talk can only be used while asleep.
@@ -1654,12 +1656,15 @@ export class BattleActions {
 		}
 
 		const moveHit = target.getMoveHitData(move);
-		moveHit.crit = move.willCrit || false;
+		// moveHit.crit = move.willCrit || false;
+		moveHit.crit = move.willCrit || (critRatio >= 4);
+		/*
 		if (move.willCrit === undefined) {
 			if (critRatio) {
 				moveHit.crit = this.battle.randomChance(1, critMult[critRatio]);
 			}
 		}
+		*/
 
 		if (moveHit.crit) {
 			moveHit.crit = this.battle.runEvent('CriticalHit', target, null, move);
@@ -1765,8 +1770,8 @@ export class BattleActions {
 		baseDamage = this.battle.runEvent('WeatherModifyDamage', pokemon, target, move, baseDamage);
 
 		// crit - not a modifier
-		// const isCrit = target.getMoveHitData(move).crit;
-		const isCrit = 0;
+		const isCrit = target.getMoveHitData(move).crit;
+		// const isCrit = 0;
 		if (isCrit) {
 			baseDamage = tr(baseDamage * (move.critModifier || (this.battle.gen >= 6 ? 1.5 : 2)));
 		}
@@ -1831,7 +1836,7 @@ export class BattleActions {
 			}
 		}
 
-		// if (isCrit && !suppressMessages) this.battle.add('-crit', target);
+		if (isCrit && !suppressMessages) this.battle.add('-crit', target);
 
 		if (pokemon.status === 'brn' && move.category === 'Physical' && !pokemon.hasAbility('guts')) {
 			if (this.battle.gen < 6 || move.id !== 'facade') {
