@@ -3378,7 +3378,8 @@ export const Moves: import('../sim/dex-moves').MoveDataTable = {
 			if (!source.hasType('Ghost')) {
 				move.target = move.nonGhostTarget as MoveTarget;
 			} else if (source.isAlly(target)) {
-				move.target = 'randomNormal';
+				// move.target = 'randomNormal';
+				move.target = 'normal';
 			}
 		},
 		onTryHit(target, source, move) {
@@ -13523,7 +13524,8 @@ export const Moves: import('../sim/dex-moves').MoveDataTable = {
 			}
 		},
 		secondary: null,
-		target: "randomNormal",
+		// target: "randomNormal",
+		target: "normal",
 		type: "Dragon",
 		contestType: "Cool",
 	},
@@ -13748,7 +13750,8 @@ export const Moves: import('../sim/dex-moves').MoveDataTable = {
 			}
 		},
 		secondary: null,
-		target: "randomNormal",
+		// target: "randomNormal",
+		target: "normal",
 		type: "Grass",
 		contestType: "Beautiful",
 	},
@@ -15191,7 +15194,8 @@ export const Moves: import('../sim/dex-moves').MoveDataTable = {
 			}
 		},
 		secondary: null,
-		target: "randomNormal",
+		// target: "randomNormal",
+		target: "normal",
 		type: "Fire",
 	},
 	raindance: {
@@ -18902,7 +18906,8 @@ export const Moves: import('../sim/dex-moves').MoveDataTable = {
 		},
 		struggleRecoil: true,
 		secondary: null,
-		target: "randomNormal",
+		// target: "randomNormal",
+		target: "normal",
 		type: "Normal",
 		contestType: "Tough",
 	},
@@ -20116,7 +20121,8 @@ export const Moves: import('../sim/dex-moves').MoveDataTable = {
 			}
 		},
 		secondary: null,
-		target: "randomNormal",
+		// target: "randomNormal",
+		target: "normal",
 		type: "Normal",
 		contestType: "Tough",
 	},
@@ -21040,7 +21046,8 @@ export const Moves: import('../sim/dex-moves').MoveDataTable = {
 			},
 		},
 		secondary: null,
-		target: "randomNormal",
+		// target: "randomNormal",
+		target: "normal",
 		type: "Normal",
 		contestType: "Cute",
 	},

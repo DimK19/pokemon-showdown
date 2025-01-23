@@ -266,7 +266,8 @@ export const Conditions: import('../sim/dex-conditions').ConditionDataTable = {
 			this.effectState.trueDuration--;
 		},
 		onStart(target, source, effect) {
-			this.effectState.trueDuration = this.random(2, 4);
+			// this.effectState.trueDuration = this.random(2, 4);
+			this.effectState.trueDuration = 3;
 			this.effectState.move = effect.id;
 		},
 		onRestart() {
@@ -276,7 +277,7 @@ export const Conditions: import('../sim/dex-conditions').ConditionDataTable = {
 		},
 		onEnd(target) {
 			if (this.effectState.trueDuration > 1) return;
-			target.addVolatile('confusion');
+			// target.addVolatile('confusion');
 		},
 		onLockMove(pokemon) {
 			if (pokemon.volatiles['dynamax']) return;
