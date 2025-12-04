@@ -1594,6 +1594,10 @@ export class Battle {
 			}
 		}
 
+        if(this.turn == 512) {
+            this.tie();
+        }
+
 		this.add('turn', this.turn);
 		if (this.gameType === 'multi') {
 			for (const side of this.sides) {
