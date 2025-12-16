@@ -5533,15 +5533,6 @@ export const Moves: import('../sim/dex-moves').MoveDataTable = {
 		pp: 15,
 		priority: 0,
 		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1, bite: 1},
-		secondaries: [
-			{
-				chance: 10,
-				status: 'brn',
-			}, {
-				chance: 10,
-				volatileStatus: 'flinch',
-			},
-		],
 		target: "normal",
 		type: "Fire",
 		contestType: "Cool",
@@ -16476,35 +16467,6 @@ export const Moves: import('../sim/dex-moves').MoveDataTable = {
 		pp: 20,
 		priority: 0,
 		flags: {protect: 1, mirror: 1, metronome: 1},
-		onModifyMove(move, pokemon) {
-			if (this.field.isTerrain('')) return;
-			move.secondaries = [];
-			if (this.field.isTerrain('electricterrain')) {
-				move.secondaries.push({
-					chance: 30,
-					status: 'par',
-				});
-			} else if (this.field.isTerrain('grassyterrain')) {
-				move.secondaries.push({
-					chance: 30,
-					status: 'slp',
-				});
-			} else if (this.field.isTerrain('mistyterrain')) {
-				move.secondaries.push({
-					chance: 30,
-					boosts: {
-						spa: -1,
-					},
-				});
-			} else if (this.field.isTerrain('psychicterrain')) {
-				move.secondaries.push({
-					chance: 30,
-					boosts: {
-						spe: -1,
-					},
-				});
-			}
-		},
 		secondary: {
 			chance: 0,
 			status: 'par',
@@ -20265,15 +20227,6 @@ export const Moves: import('../sim/dex-moves').MoveDataTable = {
 		pp: 15,
 		priority: 0,
 		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1, bite: 1},
-		secondaries: [
-			{
-				chance: 10,
-				status: 'par',
-			}, {
-				chance: 10,
-				volatileStatus: 'flinch',
-			},
-		],
 		target: "normal",
 		type: "Electric",
 		contestType: "Cool",
@@ -20750,17 +20703,6 @@ export const Moves: import('../sim/dex-moves').MoveDataTable = {
 		priority: 0,
 		flags: {protect: 1, mirror: 1, metronome: 1},
 		critRatio: 2,
-		secondaries: [
-			{
-				chance: 50,
-				boosts: {
-					def: -1,
-				},
-			}, {
-				chance: 30,
-				volatileStatus: 'flinch',
-			},
-		],
 		target: "normal",
 		type: "Fighting",
 	},
@@ -21354,16 +21296,6 @@ export const Moves: import('../sim/dex-moves').MoveDataTable = {
 			onSideResidualSubOrder: 7,
 			onSideEnd(targetSide) {
 				this.add('-sideend', targetSide, 'Water Pledge');
-			},
-			onModifyMove(move, pokemon) {
-				if (move.secondaries && move.id !== 'secretpower') {
-					this.debug('doubling secondary chance');
-					for (const secondary of move.secondaries) {
-						if (pokemon.hasAbility('serenegrace') && secondary.volatileStatus === 'flinch') continue;
-						if (secondary.chance) secondary.chance *= 2;
-					}
-					if (move.self?.chance) move.self.chance *= 2;
-				}
 			},
 		},
 		secondary: null,

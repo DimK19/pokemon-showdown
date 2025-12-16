@@ -174,6 +174,8 @@ export class Battle {
 	abilityOrder: number;
 	quickClawRoll: boolean;
 
+    speedTieResolution: number;
+
 	teamGenerator: ReturnType<typeof Teams.getGenerator> | null;
 
 	readonly hints: Set<string>;
@@ -260,6 +262,8 @@ export class Battle {
 		this.lastDamage = 0;
 		this.abilityOrder = 0;
 		this.quickClawRoll = false;
+
+        this.speedTieResolution = 0;
 
 		this.teamGenerator = null;
 
@@ -445,9 +449,54 @@ export class Battle {
 					[list[sorted + i], list[index]] = [list[index], list[sorted + i]];
 				}
 			}
+            /*
 			if (nextIndexes.length > 1) {
 				this.prng.shuffle(list, sorted, sorted + nextIndexes.length);
 			}
+            */
+            // -----------------------------------------------------------------
+
+            if (nextIndexes.length > 1) {
+				const getSideN = (item: any): number | -1 => {
+					if (item.side && typeof item.side.n === 'number') return item.side.n;
+					if (item.pokemon && item.pokemon.side && typeof item.pokemon.side.n === 'number') return item.pokemon.side.n;
+					if (item.effectHolder && item.effectHolder.side && typeof item.effectHolder.side.n === 'number') return item.effectHolder.side.n;
+					return -1;
+				};
+
+				let hasP1 = false;
+				let hasP2 = false;
+				for (const index of nextIndexes) {
+					const n = getSideN(list[index]);
+					if (n === 0) hasP1 = true;
+					if (n === 1) hasP2 = true;
+				}
+
+				if (hasP1 && hasP2) {
+					// Alternating resolution: P1 (0) wins if resolution is 0, P2 (1) wins if resolution is 1
+					const winner = this.speedTieResolution;
+					this.speedTieResolution = 1 - this.speedTieResolution;
+					this.debug(`Speed Tie resolved: P${winner + 1} goes first`);
+
+					const tiedItems = nextIndexes.map(i => list[i]);
+					tiedItems.sort((a, b) => {
+						const nA = getSideN(a);
+						const nB = getSideN(b);
+						if (nA === winner && nB !== winner) return -1;
+						if (nB === winner && nA !== winner) return 1;
+						return 0;
+					});
+
+					for (let i = 0; i < nextIndexes.length; i++) {
+						list[nextIndexes[i]] = tiedItems[i];
+					}
+				} else {
+					this.prng.shuffle(list, sorted, sorted + nextIndexes.length);
+				}
+			}
+
+            //  ------------------------------------------------------------
+
 			sorted += nextIndexes.length;
 		}
 	}
@@ -456,9 +505,21 @@ export class Battle {
 	 * Runs an event with no source on each Pokémon on the field, in Speed order.
 	 */
 	eachEvent(eventid: string, effect?: Effect | null, relayVar?: boolean) {
-		const actives = this.getAllActive();
+        const err = new Error();
+        const stack = err.stack?.split("\n") ?? [];
+
+        // stack[0] = "Error"
+        // stack[1] = the current function
+        // stack[2] = the caller
+
+        const caller = stack[2]?.trim();
+
+        //console.log("eachEvent called from:", caller);
+		let actives = this.getAllActive();
 		if (!effect && this.effect) effect = this.effect;
 		this.speedSort(actives, (a, b) => b.speed - a.speed);
+        //console.log(`!!!!!!!!!!!!!!!!!!!!! ACTIVES ${actives} ${typeof actives} EVENT ID ${eventid} EFFECT ${JSON.stringify(effect)}`);
+
 		for (const pokemon of actives) {
 			this.runEvent(eventid, pokemon, null, effect, relayVar);
 		}
@@ -707,6 +768,17 @@ export class Battle {
 		// 	if (!Battle.eventCounter[eventid]) Battle.eventCounter[eventid] = 0;
 		// 	Battle.eventCounter[eventid]++;
 		// }
+        // console.log(`runEvent called with eventid = ${eventid}`);//, effect = ${JSON.stringify(sourceEffect)}`);
+        const err = new Error();
+        const stack = err.stack?.split("\n") ?? [];
+
+        // stack[0] = "Error"
+        // stack[1] = the current function
+        // stack[2] = the caller
+
+        const caller = stack[2]?.trim();
+
+        // console.log("runEvent called from:", caller);
 		if (this.eventDepth >= 8) {
 			// oh fuck
 			this.add('message', 'STACK LIMIT EXCEEDED');
